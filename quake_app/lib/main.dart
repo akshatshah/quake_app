@@ -3,9 +3,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http ;
 
+Map _data;
+
 void main() async {
 
-  List _data = await getQuakes();
+  _data = await getQuakes();
+  print(_data['features'][0]['properties']);
 
   runApp(new MaterialApp(
     title: 'Earthquakes',
@@ -24,12 +27,25 @@ class Quakes extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.teal,
       ),
+
+      body: new Center(
+        child: new ListView.builder(
+            itemCount: _data['features'].length,
+            padding: const EdgeInsets.all(16.0),
+            itemBuilder: (BuildContext context, int position){
+              if(position.isOdd) return new Divider();
+              return ListTile(
+                title: new Text("${_data['features'][position]['properties']['place']}"),
+              );
+            },
+        ),
+      ),
     );
   }
 
 }
 
-Future<List> getQuakes() async {
+Future<Map> getQuakes() async {
   String apiUrl ='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
 
   http.Response response =await http.get(apiUrl);
