@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:intl/intl.dart';
 Map _data;
 
 void main() async {
@@ -33,20 +33,38 @@ class Quakes extends StatelessWidget {
           itemBuilder: (BuildContext context, int position) {
             if (position.isOdd) return new Divider();
             final index = position ~/ 2;
+
+            var format = new DateFormat.yMMMd().add_jm();
+            var date = format.format(new DateTime.fromMicrosecondsSinceEpoch(_data['features'][index]['properties']['time']*1000,
+            isUtc: true));
             return ListTile(
-              title: new Text(
-                "Magnitude: ${_data['features'][index]['properties']['mag']}",
-                style: new TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.teal,
-                    fontWeight: FontWeight.w500
+              title: Container(
+                child: Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: new Icon(Icons.access_time,
+                      color: Colors.tealAccent.shade700,),
+                    ),
+                    new Text(
+                      "$date",
+                      style: new TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.teal,
+                          fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ],
                 ),
               ),
               subtitle: new Container(
                 child: new Row(
                     children: <Widget>[
-                new Icon(Icons.location_on,
-                color: Colors.tealAccent,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: new Icon(Icons.location_on,
+                  color: Colors.tealAccent.shade700,),
+                ),
                 new Expanded(
                   child: new Text("${_data['features'][index]['properties']['place']}",
                     style: new TextStyle(
