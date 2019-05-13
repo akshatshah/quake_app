@@ -1,6 +1,6 @@
 # quake_app
 
-A new Flutter application.
+This flutter application pulls information about recent earthquakes from an API and displays them in an app.
 
 ## Getting Started
 
